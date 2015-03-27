@@ -124,7 +124,7 @@ class Word{
         }
         $this->swf = basename( $this->file , '.' . end ( explode( '.' , $this->file ) ) ) . '.swf';
         $cmd = $this->config['pdf2swf'] . ' -o ' . $this->config['swfPath'] . $this->swf . ' -f ' . $this->config['pdfPath'] . $this->pdf . ' 2>&1 > /dev/null';
-        exec( escapeshellcmd( $cmd )  );
+        exec( $cmd );
         if ( !file_exists( $this->config['swfPath'] . $this->swf ) ) {
             $this->error['message'] = '未能成功创建swf文件';
             $this->error['code'] = __LINE__;
