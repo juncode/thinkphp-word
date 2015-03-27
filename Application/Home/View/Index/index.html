@@ -12,9 +12,29 @@ and open the template in the editor.
     </head>
     <body>
         <h2>word 2 flash 演示系统</h2>
-        <form action="__URL__/upload" enctype="multipart/form-data" method="post" >
-            <input type="file" name="word" />
-            <input type="submit" value="提交" >
-        </form>
+        <div>
+            <form action="__URL__/upload" enctype="multipart/form-data" method="post" >
+                <input type="file" name="word" />
+                <input type="submit" value="提交" >
+            </form>
+        </div>
+        <div>
+            <h3>文件转换</h3>
+            <a href="__URL__/run">开始转换文件</a>
+        </div>
+        <div>
+            <h3>文件列表</h3>
+            <table>
+                <thead>
+                    <tr><th>文件名</th><th>状态</th><th>错误信息</th><th>flash文件</th></tr>
+                </thead>
+                <tbody>
+                <foreach name='arrayfile' item='file'>
+                    <tr><td>{$file.filename}</td><td><eq name="file:state" value="0">未处理<else />已处理</eq></td><td><neq name="file:err" value="">{$file.err}</neq></td><td><a href="__URL__/flash?id={$file.flashname}" target="_blank" >{$file.flashname}</a></td></tr>
+                </foreach>
+                </tbody>
+            </table>
+
+        </div>
     </body>
 </html>
