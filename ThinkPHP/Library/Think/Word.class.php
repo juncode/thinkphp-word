@@ -1,26 +1,27 @@
 <?php
 
 /**
- * 
+ * 本文件是 word 文件转swf 文件的扩展类，理论上是对框架无依赖性，可移植性强，移植时请将第一行代码 namespace Think;给cut掉。
  * @author jun_huang <j@wonhsi.com>
- * @since Expression datetime is undefined on line 7, column 13 in Templates/Scripting/EmptyPHP.php.
+ * @since 2015年3月27日16:17:01
  * @version $id 1.0
- * @link http://antiy.com
- * @copyright Copyright (c) 2014, Antiy.Com All rights reserved
+ * @link 
+ * @copyright 
  */
 
 namespace Think;
 class Word{
     /*
      * 默认文档处理配置
+     * 请依据实际安装情况配置 libreoffice , pdf2swf 命令
      * @var array
      */
     private $config = array(
         'wordRoot' => './Uploads/',
         'pdfPath' => './PDFFile/',
         'swfPath' => './SWFFile/',
-        'libreoffice' => 'libreoffice4.4 --invisible --convert-to pdf:writer_pdf_Export --outdir ',
-        'pdf2swf' => 'pdf2swf  -T -z -t -s languagedir=/usr/local/share/xpdf/chinese-simplified -s flashversion=9 ' , // -o -f 附加指定
+        'libreoffice' => '/usr/bin/libreoffice4.4 --invisible --convert-to pdf:writer_pdf_Export --outdir ',
+        'pdf2swf' => '/usr/local/bin/pdf2swf  -T -z -t -s languagedir=/usr/local/share/xpdf/chinese-simplified -s flashversion=9 ' , // -o -f 附加指定
         'logPath' => '',
     );
     
@@ -85,6 +86,10 @@ class Word{
         return true;
     }
     
+    /*
+     * @description 集成 模块，生成pdf 和 swf 文件。
+     * @return boolean 
+     */
     public function getSwf() {
         if ( !$this->_toPdf() ) {
             return false;
@@ -95,10 +100,19 @@ class Word{
         return true;
     }
     
+    /*
+     * 返回生成后的swf文件 包括路径
+     * @return string
+     */
     public function getSwfName() {
         return $this->config['swfPath'] . $this->swf;
     }
     
+    
+    /*
+     * 内部方法，生成swf 文件
+     * @return boolean 
+     */
     public function _toSwf() {
         if ( empty( $this->config['pdf2swf'] ) ) {
             $this->error['message'] = '命令配置有误，请重新配置';
@@ -108,7 +122,7 @@ class Word{
         if ( !$this->_checkPath( $this->config['swfPath'] ) ) {
             return false;
         }
-        $this->swf = basename( $this->file , '.' . end ( explode( '.' , $this->file ) ) );
+        $this->swf = basename( $this->file , '.' . end ( explode( '.' , $this->file ) ) ) . '.swf';
         $cmd = $this->config['pdf2swf'] . ' -o ' . $this->config['swfPath'] . $this->swf . ' -f ' . $this->config['pdfPath'] . $this->pdf . ' 2>&1 > /dev/null';
         exec( escapeshellcmd( $cmd )  );
         if ( !file_exists( $this->config['swfPath'] . $this->swf ) ) {
@@ -120,6 +134,10 @@ class Word{
         }        
     }
     
+    /*
+     * 内部方法，生成pdf文件
+     * @return boolean 
+     */
     public function _toPdf() {
         if ( empty( $this->config['libreoffice'] ) ) {
             $this->error['message'] = '命令配置有误,请重新配置';
@@ -131,8 +149,7 @@ class Word{
         }
         $cmd = $this->config['libreoffice'] . '"' . $this->config['pdfPath'] . '" "' . $this->file . '" 2>&1 > /dev/null';
         exec ( escapeshellcmd( $cmd ) );
-        $this->pdf = basename( $this->file , '.' .  end ( explode( $this->file, '.' ) ) );
-        echo $this->pdf;
+        $this->pdf = basename( $this->file , '.' .  end ( '.' , explode( $this->file ) ) ) . '.pdf';
         if ( !file_exists( $this->config['pdfPath'] ) . $this->pdf ) {
             $this->error['message'] = '转换成pdf中失败，请重新操作';
             $this->error['code'] = __LINE__;
@@ -176,6 +193,7 @@ class Word{
         } else {
             $this->error['message'] = "目录 {$path} 创建失败!";
             $this->error['code'] = __LINE__;
+            return false;
         }
     }
     
