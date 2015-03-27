@@ -108,7 +108,7 @@ class Word{
         if ( !$this->_checkPath( $this->config['swfPath'] ) ) {
             return false;
         }
-        $this->swf = basename( $this->file , end ( explode( '.' , $this->file ) ) );
+        $this->swf = basename( $this->file , '.' . end ( explode( '.' , $this->file ) ) );
         $cmd = $this->config['pdf2swf'] . ' -o ' . $this->config['swfPath'] . $this->swf . ' -f ' . $this->config['pdfPath'] . $this->pdf . ' 2>&1 > /dev/null';
         exec( escapeshellcmd( $cmd )  );
         if ( !file_exists( $this->config['swfPath'] . $this->swf ) ) {
@@ -131,7 +131,7 @@ class Word{
         }
         $cmd = $this->config['libreoffice'] . '"' . $this->config['pdfPath'] . '" "' . $this->file . '" 2>&1 > /dev/null';
         exec ( escapeshellcmd( $cmd ) );
-        $this->pdf = basename( $this->file , end ( explode( $this->file, '.' ) ) );
+        $this->pdf = basename( $this->file , '.' .  end ( explode( $this->file, '.' ) ) );
         if ( !file_exists( $this->config['pdfPath'] ) . $this->pdf ) {
             $this->error['message'] = '转换成pdf中失败，请重新操作';
             $this->error['code'] = __LINE__;
