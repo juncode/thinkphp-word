@@ -149,7 +149,7 @@ class Word{
         }
         $cmd = $this->config['libreoffice'] . '"' . $this->config['pdfPath'] . '" "' . $this->file . '" 2>&1 > /dev/null';
         exec ( escapeshellcmd( $cmd ) );
-        $this->pdf = basename( $this->file , '.' .  end ( '.' , explode( $this->file ) ) ) . '.pdf';
+        $this->pdf = basename( $this->file , '.' .  end (  explode( '.' ,$this->file ) ) ) . '.pdf';
         if ( !file_exists( $this->config['pdfPath'] ) . $this->pdf ) {
             $this->error['message'] = '转换成pdf中失败，请重新操作';
             $this->error['code'] = __LINE__;
