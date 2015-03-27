@@ -76,7 +76,7 @@ class Word{
      * @return BOOL
      */
     public function setFile( $filename ) {
-        if ( !file_exists( $this->config['word'] ) ) {
+        if ( !file_exists( $filename ) ) {
             $this->error['code'] = 10;
             $this->error['message'] = '原文件不存在';
             return false;
